@@ -6,6 +6,12 @@ Most algorithms you will write in Mex (for acceleration I presume) will only dea
 I provide a header file `standalone.h` which contains a minimal set of definitions to make it easier to write Mex programs in C++.
 I also added a few useful things to allow assertions (throwing exceptions) and keyboard interruptions from the Matlab console.
 
+## Documentation
+
+> TO-DO: Note that the documentation is currently under construction.
+
+Please refer to the [wiki](https://github.com/Sheljohn/matlab-mex/wiki).
+
 ## Usage
 
 An example file `test.cpp`
