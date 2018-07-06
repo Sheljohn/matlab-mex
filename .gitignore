@@ -1,0 +1,28 @@
+
+## OS generated files
+*._*
+.DS_Store*
+.Spotlight*
+.Trash*
+*ehthumbs.db
+*Thumbs.db
+*.fuse_hidden*
+
+## Temporary files 
+*.swp
+*~
+tmp*
+_tmp/
+
+## Compiled files
+*.o
+*.o-*
+*.obj
+*.a
+*.class
+*.pyc
+*.mexmac*
+*.mexa*
+
+## Application-specific
+.vscode
