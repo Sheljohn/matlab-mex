@@ -53,7 +53,7 @@ function cmd = compile( files, options, varargin )
     assert( iscellstr(files), 'Files ($1) should be a string or cell-string.' );
     assert( all(cellfun( filetest, files )), 'One or several files not found.' );
     
-    T = parse_options(options);
+    T = parse_options(options, fileparts(files{1})); % default output dir with target file
     S = parse_settings(varargin{:});
     
     
@@ -106,14 +106,15 @@ function cmd = compile( files, options, varargin )
     cmd{end+1} = I;
     
     cmd = horzcat( cmd, files );
+    disp(['mex ' strjoin(cmd)]);
     mex(cmd{:});
     
 end
 
-function out = parse_options(in)
+function out = parse_options(in,filedir)
 
     % set defaults
-    out.outdir  = pwd;
+    out.outdir  = filedir;
     out.outfile = '';
     out.mexopts = '';
     

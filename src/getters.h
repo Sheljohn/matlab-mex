@@ -49,7 +49,11 @@ namespace jhm {
         index_t nr = mxGetM(ms);
         index_t nc = mxGetN(ms);
 
-        if ( nr < nc )
+        if ( nr*nc == 0 ) {
+            // empty vector
+            return Vector<T>( static_cast<T*>(mxGetData(ms)), 0 );
+        }
+        else if ( nr < nc )
         {
             JHM_ASSERT( (nr==1) && (nc>1), "Not a vector." );
             return Vector<T>( static_cast<T*>(mxGetData(ms)), nc );

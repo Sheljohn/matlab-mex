@@ -44,15 +44,19 @@ static char jhm_msgbuf[JHM_MSGBUF_SIZE];
 #define JHM_WASSERT_RF( cdt, msg, args... ) JHM_WASSERT_R((cdt),false,msg,##args)
 
 namespace jhm {
+    
+    // Convenient printing functions
+    template <typename ...Args>
+    inline void print( const std::string& fmt, Args&&... args ) {
+        mexPrintf( fmt.c_str(), std::forward<Args>(args)... );
+    }
 
-    // Convenient printing with trailing newline
-    template <class... Args>
+    template <typename ...Args>
     void println( std::string fmt, Args&&... args )
     {
         fmt += "\n"; 
         mexPrintf( fmt.c_str(), std::forward<Args>(args)... );
     }
-    
 }
 
 // ------------------------------------------------------------------------

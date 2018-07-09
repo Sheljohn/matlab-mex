@@ -101,7 +101,7 @@ namespace jhm {
         for ( auto& name: names ) 
             if ( !has_field(name) ) 
             {
-                println( "Field '%s' doesn't exist.", name );
+                mexPrintf( "Field '%s' doesn't exist.\n", name );
                 return false;
             }
         return true;

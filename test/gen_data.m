@@ -15,7 +15,7 @@ function s = gen_data()
     
     s.vec1 = [];
     s.vec2 = [1,2,3];
-    s.vec3 = [1,2,3]';
+    s.vec3 = [3,2,1]';
     
     s.mat1 = toeplitz(1:5);
     s.mat2 = [1;2] * [10,11,12];
