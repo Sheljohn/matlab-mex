@@ -1,15 +1,14 @@
 
 #include <iostream>
-#include "../standalone.h"
-#include "../redirect.h"
+#include "jh-mex.h"
 
 void mexFunction( int nargout, mxArray *out[],
                   int nargin, const mxArray *in[] )
 {
-    sa::cout_redirect();
-    sa::MAT mfile("data.mat");
+    jhm::cout_redirect();
+    jhm::MAT mfile("data.mat");
     
-    sa::println("Opened file with the following fields:");
+    jhm::println("Opened file with the following fields:");
     for ( unsigned i=0; i < mfile.nfields(); ++i )
-        std::cout << mfile.field_name(i) << std::endl;
+        std::cout << mfile.get_name(i) << std::endl;
 }
