@@ -7,7 +7,7 @@
 // @contact      my email
 //==================================================
 
-#include "jh-mex.h"
+#include "jmx.h"
 
 // include other files from this project
 // #include "example-other.h"

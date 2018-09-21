@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "jh-mex.h"
+#include "jmx.h"
 
 // ------------------------------------------------------------------------
 

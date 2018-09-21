@@ -1,4 +1,17 @@
-function cmd = compile_jhm( files, options, varargin )
+function cmd = jmx( files, options, varargin )
+%
+% cmd = jmx( files, options, varargin )
+%
+% Compile a Mex file using the JMX library.
+%
+% files:    path to Mex file
+%           or a cell starting with path to Mex file, followed by object files
+%
+% options + additional inputs: see jmx_compile for help
+%
+% See also: jmx_compile
+%
+% JH
 
     if nargin < 2, options=struct(); end
 
@@ -6,9 +19,9 @@ function cmd = compile_jhm( files, options, varargin )
     here = fileparts(mfilename('fullpath'));
     
     incdir = fullfile(here,'inc');
-    objfile = fullfile(incdir,'jh-mex.o');
+    objfile = fullfile(incdir,'jmx.o');
     if exist(objfile,'file') ~= 2
-        compile_lib();
+        jmx_build();
     end
     
     files = wrap_cell(files);
@@ -26,7 +39,7 @@ function cmd = compile_jhm( files, options, varargin )
         args{end+1} = incdir;
     end
     
-    cmd = compile( files, options, args{:} );
+    cmd = jmx_compile( files, options, args{:} );
 
 end
 

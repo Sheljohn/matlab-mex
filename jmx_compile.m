@@ -1,6 +1,6 @@
-function cmd = compile( files, options, varargin )
+function cmd = jmx_compile( files, options, varargin )
 %
-% cmd = compile( files, options, ... )
+% cmd = jmx_compile( files, options, ... )
 %
 % Compile C++ files using Mex.
 % 
@@ -98,14 +98,10 @@ function cmd = compile( files, options, varargin )
         cmd{end+1} = T.outfile;
     end
     
-    cmd{end+1} = F;
-    cmd{end+1} = D;
-    cmd{end+1} = U;
-    cmd{end+1} = l;
-    cmd{end+1} = L;
-    cmd{end+1} = I;
-    
+    cmd(end+(1:6)) = {F,D,U,l,L,I};
+    cmd = cmd(cellfun( @(x) ~isempty(x), cmd ));
     cmd = horzcat( cmd, files );
+
     disp(['mex ' strjoin(cmd)]);
     mex(cmd{:});
     
