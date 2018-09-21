@@ -1,5 +1,5 @@
-#ifndef JH_MEX_H_INCLUDED
-#define JH_MEX_H_INCLUDED
+#ifndef JMX_H_INCLUDED
+#define JMX_H_INCLUDED
 
 //==================================================
 // @title        J.H. Mex Library
@@ -7,8 +7,8 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#ifndef JHM_MSGBUF_SIZE
-#define JHM_MSGBUF_SIZE 2047
+#ifndef JMX_MSGBUF_SIZE
+#define JMX_MSGBUF_SIZE 2047
 #endif
 
 #include "common.h"

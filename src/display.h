@@ -1,5 +1,5 @@
-#ifndef JHM_DISPLAY_H_INCLUDED
-#define JHM_DISPLAY_H_INCLUDED
+#ifndef JMX_DISPLAY_H_INCLUDED
+#define JMX_DISPLAY_H_INCLUDED
 
 //==================================================
 // @title        display.h
@@ -11,11 +11,9 @@
 #include "sequence.h"
 #include "mapping.h"
 
-
-
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
 
     template <class T>
     void dispScalar( const T& x ) 

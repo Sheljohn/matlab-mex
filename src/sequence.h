@@ -1,5 +1,5 @@
-#ifndef JHM_SEQUENCE_H_INCLUDED
-#define JHM_SEQUENCE_H_INCLUDED
+#ifndef JMX_SEQUENCE_H_INCLUDED
+#define JMX_SEQUENCE_H_INCLUDED
 
 //==================================================
 // @title        sequence.h
@@ -15,23 +15,25 @@
 
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
 
-    template <class T, class M = ReadOnlyMemory<T> >
+    template <class T, class M >
     struct Container
     {
+        using value_type = typename M::value_type;
+
         M mem;
         virtual void clear() =0;
         virtual index_t ndims() const =0;
 
         inline index_t numel() const { return mem.size; }
-        inline void free() { mem.clear(); clear(); }
-        inline T& operator[] ( index_t k ) const { return mem.data[k]; }
+        inline void free() { mem.free(); clear(); }
+        inline value_type& operator[] ( index_t k ) const { return mem.data[k]; }
     };
     
     // ----------  =====  ----------
     
-    template <class T, class M = ReadOnlyMemory<T> >
+    template <class T, class M = CppMemory<T> >
     struct Vector : public Container<T,M>
     {
         index_t n;
@@ -55,9 +57,10 @@ namespace jhm {
 
     // ----------  =====  ----------
 
-    template <class T, class M = ReadOnlyMemory<T> >
+    template <class T, class M = CppMemory<T> >
     struct Matrix : public Container<T,M>
     {
+        using value_type = typename M::value_type;
         index_t nr, nc;
 
         Matrix()
@@ -76,15 +79,16 @@ namespace jhm {
         inline void alloc( index_t nrows, index_t ncols )
             { this->mem.alloc(nrows*ncols); nr=nrows; nc=ncols; }
 
-        inline T& operator() ( index_t r, index_t c ) const
+        inline value_type& operator() ( index_t r, index_t c ) const
             { return this->mem[ r + nr*c ]; }
     };
 
     // ----------  =====  ----------
 
-    template <class T, class M = ReadOnlyMemory<T> >
+    template <class T, class M = CppMemory<T> >
     struct Volume : public Container<T,M>
     {
+        using value_type = typename M::value_type;
         index_t nr, nc, ns;
 
         Volume()
@@ -103,7 +107,7 @@ namespace jhm {
         inline void alloc( index_t nrows, index_t ncols, index_t nslices )
             { this->mem.alloc(nrows*ncols*nslices); nr=nrows; nc=ncols; ns=nslices; }
 
-        inline T& operator() ( index_t r, index_t c, index_t s ) const
+        inline value_type& operator() ( index_t r, index_t c, index_t s ) const
             { return this->mem[ r + nr*c + nr*nc*s ]; }
     };
 

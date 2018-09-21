@@ -9,7 +9,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
 
     void cout_redirect( bool status )
     {
@@ -26,8 +26,8 @@ namespace jhm {
     
     int set_field( mxArray *mxs, index_t index, const char *field, mxArray *value )
     {
-        JHM_ASSERT( mxs, "Null pointer." );
-        JHM_ASSERT( mxIsStruct(mxs), "Input is not a struct." );
+        JMX_ASSERT( mxs, "Null pointer." );
+        JMX_ASSERT( mxIsStruct(mxs), "Input is not a struct." );
 
         // try to find the corresponding field
         int fnum = mxGetFieldNumber( mxs, field );
@@ -53,8 +53,8 @@ namespace jhm {
 
     int set_cell( mxArray *mxc, index_t index, mxArray *value )
     {
-        JHM_ASSERT( mxc, "Null pointer." );
-        JHM_ASSERT( mxIsStruct(mxc), "Input is not a cell." );
+        JMX_ASSERT( mxc, "Null pointer." );
+        JMX_ASSERT( mxIsStruct(mxc), "Input is not a cell." );
 
         mxSetCell( mxc, index, value );
         return 0; // mxSetCell doesn't return a status...
@@ -62,7 +62,7 @@ namespace jhm {
 
     int set_variable( MATFile *mtf, const char *name, mxArray *value )
     {
-        JHM_ASSERT( mtf, "Null pointer." );
+        JMX_ASSERT( mtf, "Null pointer." );
         return matPutVariable( mtf, name, value );
     }
     
@@ -70,8 +70,8 @@ namespace jhm {
     
     std::string get_string( const mxArray *ms ) 
     {
-        JHM_ASSERT( ms, "Null pointer." );
-        JHM_ASSERT( mxIsChar(ms), "Input is not a string." );
+        JMX_ASSERT( ms, "Null pointer." );
+        JMX_ASSERT( mxIsChar(ms), "Input is not a string." );
 
         std::string val;
         val.resize( mxGetNumberOfElements(ms) );
@@ -90,10 +90,10 @@ namespace jhm {
     bool AbstractMapping::has_any( const inilst<const char*>& names ) const
     {
         for ( auto& name: names )
-                if ( has_field(name) )
-                    return true;
+            if ( has_field(name) )
+                return true;
 
-            return false;
+        return false;
     }
 
     bool AbstractMapping::has_fields ( const inilst<const char*>& names ) const
@@ -101,7 +101,7 @@ namespace jhm {
         for ( auto& name: names ) 
             if ( !has_field(name) ) 
             {
-                mexPrintf( "Field '%s' doesn't exist.\n", name );
+                println( "Field '%s' doesn't exist.", name );
                 return false;
             }
         return true;
@@ -120,14 +120,14 @@ namespace jhm {
     bool MAT::open( const char *name )
     {
         clear();
-        JHM_ASSERT( name, "Null filename." );
+        JMX_ASSERT( name, "Null filename." );
 
         MATFile *mf = matOpen( name, "r" );
-        JHM_ASSERT( mf, "Error opening file: %s", name );
+        JMX_ASSERT( mf, "Error opening file: %s", name );
 
         int nf = 0;
         const char **fnames = (const char**) matGetDir( mf, &nf );
-        JHM_WREJECT( nf == 0, "Empty file." );
+        JMX_WREJECT( nf == 0, "Empty file." );
 
         mfile = mf;
         this->m_fields.resize(nf);
@@ -145,11 +145,11 @@ namespace jhm {
     
     void Cell::wrap( const mxArray *ms ) 
     {
-        JHM_ASSERT( ms, "Null pointer." );
-        JHM_ASSERT( mxIsCell(ms), "Input is not a cell." );
+        JMX_ASSERT( ms, "Null pointer." );
+        JMX_ASSERT( mxIsCell(ms), "Input is not a cell." );
 
         int nc = mxGetNumberOfElements(ms);
-        JHM_WREJECT( nc == 0, "Empty cell." );
+        JMX_WREJECT( nc == 0, "Empty cell." );
 
         mcell = ms;
     }
@@ -165,11 +165,11 @@ namespace jhm {
     bool Struct::wrap( const mxArray* ms, index_t index )
     {
         clear();
-        JHM_ASSERT( ms, "Null pointer." );
-        JHM_ASSERT( mxIsStruct(ms), "Input is not a structure." );
+        JMX_ASSERT( ms, "Null pointer." );
+        JMX_ASSERT( mxIsStruct(ms), "Input is not a structure." );
 
         const index_t nf = mxGetNumberOfFields(ms);
-        JHM_WREJECT( nf == 0, "Empty struct." );
+        JMX_WREJECT( nf == 0, "Empty struct." );
 
         mstruct = ms;
         this->m_fields.resize(nf);

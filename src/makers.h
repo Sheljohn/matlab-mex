@@ -1,5 +1,5 @@
-#ifndef JHM_MAKERS_H_INCLUDED
-#define JHM_MAKERS_H_INCLUDED
+#ifndef JMX_MAKERS_H_INCLUDED
+#define JMX_MAKERS_H_INCLUDED
 
 //==================================================
 // @title        makers.h
@@ -13,7 +13,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
 
     template <class T>
     inline mxArray* make_scalar( const T& val ) {

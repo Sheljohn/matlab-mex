@@ -1,5 +1,5 @@
-#ifndef JHM_MAPPING_H_INCLUDED
-#define JHM_MAPPING_H_INCLUDED
+#ifndef JMX_MAPPING_H_INCLUDED
+#define JMX_MAPPING_H_INCLUDED
 
 //==================================================
 // @title        mapping.h
@@ -16,7 +16,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
 
     class AbstractMapping
     {

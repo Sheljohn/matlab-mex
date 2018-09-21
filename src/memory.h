@@ -1,5 +1,5 @@
-#ifndef JHM_MEMORY_H_INCLUDED
-#define JHM_MEMORY_H_INCLUDED
+#ifndef JMX_MEMORY_H_INCLUDED
+#define JMX_MEMORY_H_INCLUDED
 
 //==================================================
 // @title        memory.h
@@ -9,13 +9,17 @@
 
 #include "common.h"
 
+#include<type_traits>
+
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
     
     template <class T>
     struct AbstractMemory
     {
+        static_assert( ! std::is_const<T>::value, "Container type cannot be const." );
+
         T *data;
         index_t size;
 
@@ -31,8 +35,6 @@ namespace jhm {
             size = n;
         }
 
-        inline T& operator[] ( index_t k ) const { return data[k]; }
-
         virtual void alloc( index_t n ) =0;
         virtual void free() =0;
     };
@@ -42,11 +44,15 @@ namespace jhm {
     template <class T>
     struct ReadOnlyMemory : public AbstractMemory<T>
     {
+        using value_type = typename std::add_const<T>::type;
+
         void alloc( index_t n )
-            { JHM_THROW( "Read-only memory cannot be allocated." ); }
+            { JMX_THROW( "Read-only memory cannot be allocated." ); }
 
         void free()
-            { JHM_THROW( "Read-only memory cannot be freed." ); }
+            { JMX_THROW( "Read-only memory cannot be freed." ); }
+
+        inline value_type& operator[] ( index_t k ) const { return this->data[k]; }
     };
 
     // ------------------------------------------------------------------------
@@ -54,6 +60,8 @@ namespace jhm {
     template <class T>
     struct MatlabMemory : public AbstractMemory<T>
     {
+        using value_type = T;
+
         void alloc( index_t n )
         {
             this->data = static_cast<T*>( mxCalloc( n, sizeof(T) ) ); 
@@ -62,6 +70,8 @@ namespace jhm {
 
         void free()
             { mxFree(this->data); this->clear(); }
+
+        inline T& operator[] ( index_t k ) const { return this->data[k]; }
     };
 
     // ------------------------------------------------------------------------
@@ -69,6 +79,8 @@ namespace jhm {
     template <class T>
     struct CppMemory : public AbstractMemory<T>
     {
+        using value_type = T;
+
         void alloc( index_t n )
         {
             this->data = new T[n](); 
@@ -77,6 +89,8 @@ namespace jhm {
 
         void free()
             { delete[] this->data; this->clear(); }
+
+        inline T& operator[] ( index_t k ) const { return this->data[k]; }
     };
 
 }

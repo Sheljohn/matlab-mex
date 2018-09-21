@@ -12,7 +12,7 @@ function cmd = compile( files, options, varargin )
 %
 % ** options
 %
-%   mex         true   ¬c         Whether the target source file is a Mex-file.
+%   mex         true   -c         Whether the target source file is a Mex-file.
 %                                 I.e. it should have a mexFunction() instead of a main().
 %
 %   mock        false  -n         Dry-run mode (will not actually compile target files if true).

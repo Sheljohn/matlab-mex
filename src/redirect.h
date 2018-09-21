@@ -1,5 +1,5 @@
-#ifndef JHM_REDIRECT_H_INCLUDED
-#define JHM_REDIRECT_H_INCLUDED
+#ifndef JMX_REDIRECT_H_INCLUDED
+#define JMX_REDIRECT_H_INCLUDED
 
 //==================================================
 // @title        redirect.h
@@ -26,7 +26,7 @@
  * sa::cout_redirect() at the beginning of your main. Note that there is no way to 
  * restore the standard output after that.
  */
-namespace jhm {
+namespace jmx {
 
     class mexPrintf_ostream
         : public std::streambuf

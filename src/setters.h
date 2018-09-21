@@ -1,5 +1,5 @@
-#ifndef JHM_SETTERS_H_INCLUDED
-#define JHM_SETTERS_H_INCLUDED
+#ifndef JMX_SETTERS_H_INCLUDED
+#define JMX_SETTERS_H_INCLUDED
 
 //==================================================
 // @title        setters.h
@@ -11,7 +11,7 @@
 
 // ------------------------------------------------------------------------
 
-namespace jhm {
+namespace jmx {
 
     int set_field( mxArray *mxs, index_t index, const char *field, mxArray *value );
 
