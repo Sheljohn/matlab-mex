@@ -1,6 +1,5 @@
 
 #include "jmx.h"
-using namespace jmx;
 
 // it's considered bad practice to use entire namespace like this, 
 // but that's ok for short functions...

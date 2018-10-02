@@ -12,6 +12,7 @@
   * [Arguments & outputs](common/args.md)
   * [Variable types](common/types.md)
   * [Compiling Mex files](common/compile.md)
+  * [Using Armadillo](common/armadillo.md)
   * [Keyboard interruptions](common/interrupt.md)
 
 * Data structures

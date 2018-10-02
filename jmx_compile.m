@@ -15,8 +15,9 @@ function cmd = jmx_compile( files, options, varargin )
 %   mex         true   -c         Whether the target source file is a Mex-file.
 %                                 I.e. it should have a mexFunction() instead of a main().
 %
-%   mock        false  -n         Dry-run mode (will not actually compile target files if true).
+%   dry         false  -n         Dry-run mode (will not actually compile target files if true).
 %   cpp11       true              Set appropriate compiler flags for the C++11 standard.
+%   arma        false             Setup compiler to use Armadillo.
 %
 %   index32     false             Newer versions of Matlab use 64-bits indices (-largeArrayDims).
 %                                 Set to true to use 32-bits legacy indexing (-compatibleArrayDims).
@@ -47,6 +48,7 @@ function cmd = jmx_compile( files, options, varargin )
     % process inputs
     if nargin < 2 || isempty(options), options = struct(); end
 
+    here = fileparts(mfilename('fullpath'));
     files = wrap_cell(files);
     filetest = @(f) ismember( exist(f,'file'), [2,7] );
     
@@ -56,16 +58,21 @@ function cmd = jmx_compile( files, options, varargin )
     T = parse_options(options, fileparts(files{1})); % default output dir with target file
     S = parse_settings(varargin{:});
     
-    
     % apply side-effects
     if T.cpp11
-        if isfield(S,'flag')
-            S.flag{end+1} = '-std=c++11';
-        else
-            S.flag = {'-std=c++11'};
-        end
+        S = append(S,'flag','-std=c++11');
     end
-    [F,D,U,l,L,I] = process_settings(S);
+    if T.index32
+        S = append(S,'def','JMX_32BIT');
+    else
+        S = append(S,'def','JMX_64BIT');
+    end
+    if T.arma 
+        S = append(S,'ipath',fullfile(here,'inc'));
+        S = append(S,'lib','lapack'); % provided by Matlab
+        S = append(S,'lib','blas');
+    end
+    [F,D,U,L,l,I] = process_settings(S);
     
     % build command
     cmd = {};
@@ -79,7 +86,7 @@ function cmd = jmx_compile( files, options, varargin )
     if ~T.mex,      cmd{end+1} = '-c'; end
     if T.optimise,  cmd{end+1} = '-O'; end
     if T.debug,     cmd{end+1} = '-g'; end
-    if T.mock,      cmd{end+1} = '-n'; end
+    if T.dry,       cmd{end+1} = '-n'; end
     if T.verbose,   cmd{end+1} = '-v'; end
     if T.silent,    cmd{end+1} = '-silent'; end
     
@@ -98,7 +105,7 @@ function cmd = jmx_compile( files, options, varargin )
         cmd{end+1} = T.outfile;
     end
     
-    cmd(end+(1:6)) = {F,D,U,l,L,I};
+    cmd = horzcat( cmd, F, D, U, L, l, I );
     cmd = cmd(cellfun( @(x) ~isempty(x), cmd ));
     cmd = horzcat( cmd, files );
 
@@ -115,11 +122,15 @@ function out = parse_options(in,filedir)
     out.mexopts = '';
     
     out.mex = true;
-    out.mock = false;
+    out.dry = false;
     
+    out.arma = false;
     out.cpp11 = true;
-    out.index32 = false;
-    
+
+    % detect integer width
+    [~,maxArraySize] = computer();
+    out.index32 = maxArraySize <= pow2(31);
+
     out.optimise = false;
     out.verbose = false;
     out.silent = false;
@@ -148,9 +159,24 @@ function c = wrap_cell(varargin)
     end
 end
 
+function x = append(x,f,v)
+    if isfield(x,f)
+        x.(f){end+1} = v;
+    else
+        x.(f) = {v};
+    end
+end
+
+function x = addquotes(x)
+    x = strtrim(x);
+    if x(1) ~= '"'
+        x = ['"' x '"'];
+    end
+end
+
 function s = parse_settings(varargin)
 
-    assert( mod(nargin,2) == 0, 'Inputs should be Name/Value pairs.' )
+    assert( mod(nargin,2) == 0, 'Inputs should be Name/Value pairs.' );
     
     n = nargin/2;
     s = struct();
@@ -182,44 +208,46 @@ function s = parse_settings(varargin)
     
 end
 
-function [flag, def, undef, lib, lpath, ipath] = process_settings(s)
+function [flag, def, undef, lpath, lib, ipath] = process_settings(s)
     
-    prefix = @(c,p) cellfun( @(s) [p s], c, 'UniformOutput', false );
+    prefix = @(c,p) cellfun( @(s) [p s], unique(c), 'UniformOutput', false );
 
     if isfield(s,'flag')
-        flag = ['CXXFLAGS="$CXXFLAGS ' strjoin(s.flag) '"'];
+        flag = {['CXXFLAGS="$CXXFLAGS ' strjoin(s.flag) '"']};
     else
-        flag = '';
+        flag = {};
     end
     
     if isfield(s,'def')
-        def = strjoin(prefix( s.def, '-D' ));
+        def = prefix( s.def, '-D' );
     else
-        def = '';
+        def = {};
     end
     
     if isfield(s,'undef')
-        undef = strjoin(prefix( s.undef, '-U' ));
+        undef = prefix( s.undef, '-U' );
     else
-        undef = '';
-    end
-    
-    if isfield(s,'lib')
-        lib = strjoin(prefix( s.lib, '-l' ));
-    else
-        lib = '';
+        undef = {};
     end
     
     if isfield(s,'lpath')
-        lpath = strjoin(prefix( s.lpath, '-L' ));
+        lpath = cellfun( @addquotes, s.lpath, 'UniformOutput', false );
+        lpath = prefix( lpath, '-L' );
     else
-        lpath = '';
+        lpath = {};
+    end
+
+    if isfield(s,'lib')
+        lib = prefix( s.lib, '-l' );
+    else
+        lib = {};
     end
     
     if isfield(s,'ipath')
-        ipath = strjoin(prefix( s.ipath, '-I' ));
+        ipath = cellfun( @addquotes, s.ipath, 'UniformOutput', false );
+        ipath = prefix( ipath, '-I' );
     else
-        ipath = '';
+        ipath = {};
     end
 
 end

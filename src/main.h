@@ -11,6 +11,12 @@
 #define JMX_MSGBUF_SIZE 2047
 #endif
 
+#ifndef JMX_64BIT
+    #ifndef JMX_32BIT
+        #define JMX_64BIT
+    #endif
+#endif
+
 #include "common.h"
 #include "redirect.h"
 #include "makers.h"
