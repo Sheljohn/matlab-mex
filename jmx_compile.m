@@ -57,6 +57,7 @@ function cmd = jmx_compile( files, options, varargin )
     
     T = parse_options(options, fileparts(files{1})); % default output dir with target file
     S = parse_settings(varargin{:});
+    files = dk.mapfun( @addquotes, files, false );
     
     % apply side-effects
     if T.cpp11
@@ -96,16 +97,16 @@ function cmd = jmx_compile( files, options, varargin )
     if ~isempty(T.mexopts)
         assert( filetest(T.mexopts), 'Mex options file not found.' );
         cmd{end+1} = '-f';
-        cmd{end+1} = T.mexopts;
+        cmd{end+1} = addquotes(T.mexopts);
     end
     if ~isempty(T.outdir)
         assert( filetest(T.outdir), 'Output folder not found.' );
         cmd{end+1} = '-outdir';
-        cmd{end+1} = T.outdir;
+        cmd{end+1} = addquotes(T.outdir);
     end
     if ~isempty(T.outfile)
         cmd{end+1} = '-output';
-        cmd{end+1} = T.outfile;
+        cmd{end+1} = addquotes(T.outfile);
     end
     
     cmd = horzcat( cmd, F, D, U, L, l, I );
@@ -174,7 +175,7 @@ end
 
 function x = addquotes(x)
     x = strtrim(x);
-    if x(1) ~= '"'
+    if ~isempty(x) && x(1) ~= '"'
         x = ['"' x '"'];
     end
 end
