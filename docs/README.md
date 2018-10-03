@@ -1,5 +1,5 @@
 
-## Jonathan's Mex library
+# Jonathan's Mex library
 
 This is a simple and tiny C++11 library to make it easier to work with both Matlab and C++.
 
