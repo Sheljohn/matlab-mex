@@ -15,8 +15,7 @@ function cmd = jmx( files, options, varargin )
 
     if nargin < 2, options=struct(); end
 
-    incdir = jmx_incpath();
-    objfile = fullfile(incdir,'jmx.o');
+    objfile = jmx_path('inc/jmx.o');
     if exist(objfile,'file') ~= 2
         jmx_build();
     end

@@ -68,7 +68,7 @@ function cmd = jmx_compile( files, options, varargin )
         S = append(S,'def','JMX_64BIT');
     end
     if T.jmx || T.arma 
-        S = append(S,'ipath',jmx_incpath());
+        S = append(S,'ipath',jmx_path('inc'));
         S = append(S,'lib','ut');
     end
     if T.arma 

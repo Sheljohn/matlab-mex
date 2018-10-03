@@ -13,7 +13,7 @@ function jmx_build(varargin)
     opt.cpp11 = true;
     opt.optimise = true;
     
-    jmx_compile( 'src/main.cpp', opt, 'lib', 'ut', varargin{:} );
-    movefile( 'src/main.o', 'inc/jmx.o' );
+    jmx_compile( jmx_path('src/main.cpp'), opt, 'lib', 'ut', varargin{:} );
+    movefile( jmx_path('src/main.o'), jmx_path('inc/jmx.o') );
     
 end
