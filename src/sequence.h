@@ -26,7 +26,10 @@ namespace jmx {
         virtual void clear() =0;
         virtual index_t ndims() const =0;
 
-        inline index_t numel() const { return mem.size; }
+        inline value_type* memptr() const { return mem.data; }
+        inline index_t memlen() const { return mem.size; }
+
+        inline index_t numel() const { return memlen(); }
         inline void free() { mem.free(); clear(); }
         inline value_type& operator[] ( index_t k ) const { return mem.data[k]; }
     };
@@ -46,6 +49,7 @@ namespace jmx {
             { assign(ptr,len); }
 
         inline index_t ndims() const { return 1; }
+        inline index_t length() const { return n; }
 
         inline void clear()
             { this->mem.clear(); n = 0; }
@@ -54,6 +58,9 @@ namespace jmx {
         inline void alloc( index_t len )
             { this->mem.alloc(len); n = len; }
     };
+
+    template <class T> using Vector_ro = Vector<T, ReadOnlyMemory<T> >;
+    template <class T> using Vector_mx = Vector<T, MatlabMemory<T> >;
 
     // ----------  =====  ----------
 
@@ -71,6 +78,8 @@ namespace jmx {
             { assign(ptr,nrows,ncols); }
 
         inline index_t ndims() const { return 2; }
+        inline index_t nrows() const { return nr; }
+        inline index_t ncols() const { return nc; }
 
         inline void clear()
             { this->mem.clear(); nr = nc = 0; }
@@ -82,6 +91,9 @@ namespace jmx {
         inline value_type& operator() ( index_t r, index_t c ) const
             { return this->mem[ r + nr*c ]; }
     };
+
+    template <class T> using Matrix_ro = Matrix<T, ReadOnlyMemory<T> >;
+    template <class T> using Matrix_mx = Matrix<T, MatlabMemory<T> >;
 
     // ----------  =====  ----------
 
@@ -99,6 +111,9 @@ namespace jmx {
             { assign(ptr,nrows,ncols,nslices); }
 
         inline index_t ndims() const { return 3; }
+        inline index_t nrows() const { return nr; }
+        inline index_t ncols() const { return nc; }
+        inline index_t nslices() const { return ns; }
 
         inline void clear()
             { this->mem.clear(); nr = nc = ns = 0; }
@@ -110,6 +125,9 @@ namespace jmx {
         inline value_type& operator() ( index_t r, index_t c, index_t s ) const
             { return this->mem[ r + nr*c + nr*nc*s ]; }
     };
+
+    template <class T> using Volume_ro = Volume<T, ReadOnlyMemory<T> >;
+    template <class T> using Volume_mx = Volume<T, MatlabMemory<T> >;
 
     // ----------  =====  ----------
     

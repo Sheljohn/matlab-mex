@@ -17,7 +17,8 @@ function cmd = jmx_compile( files, options, varargin )
 %
 %   dry         false  -n         Dry-run mode (will not actually compile target files if true).
 %   cpp11       true              Set appropriate compiler flags for the C++11 standard.
-%   arma        false             Setup compiler to use Armadillo.
+%   arma        false             Setup paths/libs to use Armadillo.
+%   jmx         true              Setup paths/libs to use JMX.
 %
 %   index32     false             Newer versions of Matlab use 64-bits indices (-largeArrayDims).
 %                                 Set to true to use 32-bits legacy indexing (-compatibleArrayDims).
@@ -48,7 +49,6 @@ function cmd = jmx_compile( files, options, varargin )
     % process inputs
     if nargin < 2 || isempty(options), options = struct(); end
 
-    here = fileparts(mfilename('fullpath'));
     files = wrap_cell(files);
     filetest = @(f) ismember( exist(f,'file'), [2,7] );
     
@@ -67,8 +67,11 @@ function cmd = jmx_compile( files, options, varargin )
     else
         S = append(S,'def','JMX_64BIT');
     end
+    if T.jmx || T.arma 
+        S = append(S,'ipath',jmx_incpath());
+        S = append(S,'lib','ut');
+    end
     if T.arma 
-        S = append(S,'ipath',fullfile(here,'inc'));
         S = append(S,'lib','lapack'); % provided by Matlab
         S = append(S,'lib','blas');
     end
@@ -124,6 +127,7 @@ function out = parse_options(in,filedir)
     out.mex = true;
     out.dry = false;
     
+    out.jmx = true;
     out.arma = false;
     out.cpp11 = true;
 
@@ -140,6 +144,7 @@ function out = parse_options(in,filedir)
     f = fieldnames(in);
     n = numel(f);
     for i = 1:n
+        dk.assert( isfield(out,f{i}), 'Unknown option: %s', f{i} );
         out.(f{i}) = in.(f{i});
     end
     

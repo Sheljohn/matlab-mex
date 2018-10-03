@@ -56,16 +56,45 @@ static char jhm_msgbuf[JMX_MSGBUF_SIZE];
     extern bool utIsInterruptPending();
 #endif
 
-namespace jmx {
+namespace jmx_types {
+
+    // short alias for initializer lists
+    template <class T>
+    using inilst = std::initializer_list<T>;
 
     // map Matlab types
     using index_t = mwIndex;
     using integ_t = mwSignedIndex;
     using real_t  = double;
 
-    // short alias for initializer lists
+    template <int C>
+    struct mex2cpp
+    {
+        typedef void type;
+    };
+
+    template <> struct mex2cpp<mxLOGICAL_CLASS> { typedef bool type; };
+    template <> struct mex2cpp<   mxINT8_CLASS> { typedef int8_t type; };
+    template <> struct mex2cpp<  mxUINT8_CLASS> { typedef uint8_t type; };
+    template <> struct mex2cpp<  mxINT16_CLASS> { typedef int16_t type; };
+    template <> struct mex2cpp< mxUINT16_CLASS> { typedef uint16_t type; };
+    template <> struct mex2cpp<  mxINT32_CLASS> { typedef int32_t type; };
+    template <> struct mex2cpp< mxUINT32_CLASS> { typedef uint32_t type; };
+    template <> struct mex2cpp<  mxINT64_CLASS> { typedef int64_t type; };
+    template <> struct mex2cpp< mxUINT64_CLASS> { typedef uint64_t type; };
+    template <> struct mex2cpp< mxSINGLE_CLASS> { typedef float type; };
+    template <> struct mex2cpp< mxDOUBLE_CLASS> { typedef double type; };
+
     template <class T>
-    using inilst = std::initializer_list<T>;
+    struct cpp2mex
+    {
+        static const mxClassID classid;
+    };
+}
+
+namespace jmx {
+
+    using namespace jmx_types;
     
     // ----------  =====  ----------
     
@@ -86,26 +115,6 @@ namespace jmx {
     inline bool interruption_pending() {
         return utIsInterruptPending();
     }
-    
-    // ----------  =====  ----------
-    
-    template <int C>
-    struct mex2cpp
-    {
-        typedef void type;
-    };
-
-    template <> struct mex2cpp<mxLOGICAL_CLASS> { typedef bool type; };
-    template <> struct mex2cpp<   mxINT8_CLASS> { typedef int8_t type; };
-    template <> struct mex2cpp<  mxUINT8_CLASS> { typedef uint8_t type; };
-    template <> struct mex2cpp<  mxINT16_CLASS> { typedef int16_t type; };
-    template <> struct mex2cpp< mxUINT16_CLASS> { typedef uint16_t type; };
-    template <> struct mex2cpp<  mxINT32_CLASS> { typedef int32_t type; };
-    template <> struct mex2cpp< mxUINT32_CLASS> { typedef uint32_t type; };
-    template <> struct mex2cpp<  mxINT64_CLASS> { typedef int64_t type; };
-    template <> struct mex2cpp< mxUINT64_CLASS> { typedef uint64_t type; };
-    template <> struct mex2cpp< mxSINGLE_CLASS> { typedef float type; };
-    template <> struct mex2cpp< mxDOUBLE_CLASS> { typedef double type; };
     
     // ----------  =====  ----------
     
