@@ -27,17 +27,8 @@ namespace jmx {
         return static_cast<T>(mxGetScalar(ms));
     }
 
-    template <class T>
-    T get_scalar( const mxArray *ms, const T& default_val ) {
-        return (ms) ? get_scalar<T>(ms) : default_val;
-    }
-
     std::string get_string( const mxArray *ms );
 
-    inline std::string get_string( const mxArray *ms, const std::string& default_val ) {
-        return (ms) ? get_string(ms) : default_val;
-    }
-    
     // ----------  =====  ----------
     
     template <class T, class M = ReadOnlyMemory<T> >
