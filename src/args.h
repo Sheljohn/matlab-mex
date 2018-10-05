@@ -8,12 +8,9 @@
 //==================================================
 
 #include "common.h"
-#include "getters.h"
-#include "makers.h"
+#include "creator.h"
+#include "extractor.h"
 
-#include <string>
-#include <vector>
-#include <utility>
 #include <functional>
 
 // ------------------------------------------------------------------------
@@ -56,116 +53,41 @@ namespace jmx {
             return ptr[k];
         }
 
-        inline void assign( index_t k, val_t val )
+        inline val_t assign( index_t k, val_t val )
         {
             JMX_ASSERT( k < len, "Failed to assign uncollected output." ); 
             JMX_ASSERT( !ptr[k], "Cannot overwrite existing output." ); 
-            ptr[k] = val;
+            return ptr[k] = val;
         }
     };
     
-    // ----------  =====  ----------
-    
     struct Arguments 
+        : public Creator<index_t>, public Extractor<index_t>
     {
         _mxOutput out;
         _mxInput in;
 
+        using key_t = Extractor<index_t>::key_t;
+        using inptr_t = Extractor<index_t>::ptr_t;
+        using outptr_t = Creator<index_t>::ptr_t;
+
+        // implement abstract methods
+        virtual inline bool _extractor_valid_key( key_t k ) const { return k < in.len; }
+        virtual inline inptr_t _extractor_get( key_t k ) const { return in[k]; }
+        virtual inline outptr_t _creator_assign( key_t k, outptr_t val ) { return out.assign(k,val); }
+        
+        // ----------  =====  ----------
+        
         Arguments( 
             int nargout, mxArray *out[],
             int nargin, const mxArray *in[]
         ) : in(in,nargin), out(out,nargout) {}
-
-        inline void _checkout( index_t k ) { 
-            JMX_ASSERT( k < out.len, "Failed to set uncollected output." ); 
-            JMX_ASSERT( !out[k], "Cannot overwrite existing output." );
-        }
 
         inline void verify( index_t inmin, index_t outmin, std::function<void()> usage ) {
             if ( in.len < inmin || out.len < outmin ) {
                 usage();
                 JMX_THROW( "Bad input; please refer to usage help above." );
             }
-        }
-
-        // plain getters
-        inline bool getbool( index_t k )         { return get_scalar<bool>( in[k] ); }
-        inline std::string getstr( index_t k )   { return get_string( in[k] ); }
-        inline Cell getcell( index_t k )         { return get_cell( in[k] ); }
-
-        inline Struct getstruct( index_t k, index_t i=0 ) 
-            { return get_struct( in[k], i ); }
-
-
-        // templated getters
-        template <class T = real_t>
-        inline T getnum( index_t k )             { return get_scalar<T>( in[k] ); }
-
-        template <class T = real_t>
-        inline Vector_ro<T> getvec( index_t k )  { return get_vector<T>( in[k] ); }
-
-        template <class T = real_t>
-        inline Matrix_ro<T> getmat( index_t k )  { return get_matrix<T>( in[k] ); }
-
-        template <class T = real_t>
-        inline Volume_ro<T> getvol( index_t k )  { return get_volume<T>( in[k] ); }
-
-
-        // getters with defaults
-        template <class T = real_t>
-        inline T getnum( index_t k, const T& val )
-            { return (k < in.len) ? getnum<T>(k) : val; }
-
-        inline bool getbool( index_t k, bool val ) 
-            { return (k < in.len) ? getbool(k) : val; }
-        inline std::string getstr( index_t k, const std::string& val )
-            { return (k < in.len) ? getstr(k) : val; }
-
-
-        // void setters
-        inline void mkbool( index_t k, bool val )
-            { out.assign(k, make_logical(val)); }
-
-        inline void mkstr( index_t k, const std::string& val )
-            { out.assign(k, make_string(val)); }
-
-        template <class T = real_t>
-        inline void mknum( index_t k, const T& val )
-            { out.assign(k, make_scalar<T>(val)); }
-
-
-        // setters with access
-        template <class T = real_t>
-        inline Vector_mx<T> mkvec( index_t k, index_t len, bool col=false ) { 
-            out.assign(k, make_vector( len, col, cpp2mex<T>::classid )); 
-            return Vector_mx<T>( static_cast<T*>(mxGetData(out[k])), len );
-        }
-
-        template <class T = real_t>
-        inline Matrix_mx<T> mkmat( index_t k, index_t nr, index_t nc ) {
-            out.assign(k, make_matrix( nr, nc, cpp2mex<T>::classid )); 
-            return Matrix_mx<T>( static_cast<T*>(mxGetData(out[k])), nr, nc );
-        }
-
-        template <class T = real_t>
-        inline Volume_mx<T> mkmat( index_t k, index_t nr, index_t nc, index_t ns ) {
-            out.assign(k, make_volume( nr, nc, cpp2mex<T>::classid )); 
-            return Volume_mx<T>( static_cast<T*>(mxGetData(out[k])), nr, nc, ns );
-        }
-
-        inline Cell mkcell( index_t k, index_t len ) {
-            out.assign(k, make_cell( len )); 
-            return Cell( out[k] );
-        }
-
-        inline Struct mkstruct( index_t k, inilst<const char*> fields ) {
-            out.assign(k, make_struct( fields, 1, 1 ));
-            return Struct( out[k] );
-        }
-
-        inline mxArray* mkstructarr( index_t k, inilst<const char*> fields, index_t nr, index_t nc ) {
-            out.assign(k, make_struct( fields, nr, nc ));
-            return out[k];
         }
     };
 
