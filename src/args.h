@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <functional>
 
 // ------------------------------------------------------------------------
 
@@ -78,6 +79,13 @@ namespace jmx {
         inline void _checkout( index_t k ) { 
             JMX_ASSERT( k < out.len, "Failed to set uncollected output." ); 
             JMX_ASSERT( !out[k], "Cannot overwrite existing output." );
+        }
+
+        inline void verify( index_t inmin, index_t outmin, std::function<void()> usage ) {
+            if ( in.len < inmin || out.len < outmin ) {
+                usage();
+                JMX_THROW( "Bad input; please refer to usage help above." );
+            }
         }
 
         // plain getters
