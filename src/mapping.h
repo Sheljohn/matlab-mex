@@ -7,9 +7,6 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#include "common.h"
-#include "setters.h"
-
 #include <deque>
 #include <string>
 #include <unordered_map>
@@ -19,6 +16,7 @@
 namespace jmx {
 
     class AbstractMapping
+        // : public Extractor<const char*>, public Creator<const char*>
     {
     public: 
 
@@ -56,12 +54,28 @@ namespace jmx {
 
         virtual int set_value( const char *name, mxArray *value ) const =0;
 
+        // // extractor interface
+        // using extractor_type = Extractor<const char*>;
+        // using creator_type = Creator<const char*>;
+        // using key_t = extractor_type::key_t;
+        // using mxinptr_t = extractor_type::ptr_t;
+        // using mxoutptr_t = creator_type::ptr_t;
+
+        // virtual inline mxinptr_t _extractor_get( key_t name ) const 
+        //     { return this->get_value(name); }
+
+        // virtual inline bool _extractor_valid_key( key_t name ) const 
+        //     { return this->has_field(name); }
+
+        // virtual inline mxoutptr_t _creator_assign( key_t name, mxoutptr_t value )
+        //     { set_value( name, value ); }
+
     protected:
 
         fieldmap_type  m_fmap;
         fields_type    m_fields;    
     };
-
+    
     // ----------  =====  ----------
 
     class MAT : public AbstractMapping

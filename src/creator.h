@@ -7,8 +7,6 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#include "common.h"
-#include "makers.h"
 #include <string>
 
 // ------------------------------------------------------------------------
@@ -18,7 +16,7 @@ namespace jmx {
     template <class Key>
     struct Creator
     {
-        using key_t = const Key&;
+        using key_t = Key;
         using ptr_t = mxArray*;
 
         // methods to be defined

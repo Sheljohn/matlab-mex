@@ -25,6 +25,8 @@ namespace jmx_types {
     
 }
 
+// ------------------------------------------------------------------------
+
 namespace jmx {
 
     void cout_redirect( bool status )

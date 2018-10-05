@@ -7,11 +7,9 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#include <algorithm>
-
-#include "common.h"
 #include "memory.h"
-#include "setters.h"
+
+#include <algorithm>
 
 // ------------------------------------------------------------------------
 

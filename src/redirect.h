@@ -7,8 +7,6 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#include "common.h"
-
 #include <memory>
 #include <iostream>
 #include <streambuf>

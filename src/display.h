@@ -7,10 +7,6 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#include "common.h"
-#include "sequence.h"
-#include "mapping.h"
-
 // ------------------------------------------------------------------------
 
 namespace jmx {

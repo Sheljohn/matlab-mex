@@ -7,10 +7,6 @@
 // @contact      Jhadida87 [at] gmail
 //==================================================
 
-#include "common.h"
-#include "creator.h"
-#include "extractor.h"
-
 #include <functional>
 
 // ------------------------------------------------------------------------
