@@ -92,9 +92,8 @@ namespace jmx {
         return Cell(ms);
     }
 
-    inline Struct get_struct( const mxArray *ms, index_t index=0 ) {
-        return Struct(ms, index);
-    }
+    // forward declaration of Struct extraction (see forward.h)
+    Struct get_struct( const mxArray *ms, index_t index=0 ); 
 
 }
 

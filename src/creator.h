@@ -20,7 +20,11 @@ namespace jmx {
         using ptr_t = mxArray*;
 
         // methods to be defined
+        // the pointer returned should be val (to be wrapped)
         virtual ptr_t _creator_assign( key_t k, ptr_t val ) =0;
+
+        // forward declaration of Struct creation (see forward.h)
+        Struct mkstruct( key_t k, inilst<const char*> fields ); 
 
         // ----------  =====  ----------
 
@@ -57,10 +61,6 @@ namespace jmx {
 
         inline Cell mkcell( key_t k, index_t len ) {
             return Cell( _creator_assign(k, make_cell( len )) );
-        }
-
-        inline Struct mkstruct( key_t k, inilst<const char*> fields ) {
-            return Struct( _creator_assign(k, make_struct( fields, 1, 1 )) );
         }
 
         inline ptr_t mkstructarr( key_t k, inilst<const char*> fields, index_t nr, index_t nc ) {

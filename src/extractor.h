@@ -22,6 +22,9 @@ namespace jmx {
         // methods to be defined
         virtual bool _extractor_valid_key( key_t k ) const =0;
         virtual ptr_t _extractor_get( key_t k ) const =0;
+
+        // forward declaration of Struct extraction (see forward.h)
+        Struct getstruct( index_t k, index_t i=0 ); 
         
         // ----------  =====  ----------
         
@@ -29,9 +32,6 @@ namespace jmx {
         inline bool getbool( key_t k )         { return get_scalar<bool>(_extractor_get(k)); }
         inline std::string getstr( key_t k )   { return get_string(_extractor_get(k)); }
         inline Cell getcell( key_t k )         { return get_cell(_extractor_get(k)); }
-
-        inline Struct getstruct( index_t k, index_t i=0 ) 
-            { return get_struct( _extractor_get(k), i ); }
 
 
         // templated getters

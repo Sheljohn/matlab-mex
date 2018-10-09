@@ -24,15 +24,19 @@
 #include "makers.h"
 #include "setters.h"
 
-// containers
+// sequence containers
 #include "sequence.h"
-#include "mapping.h"
-#include "getters.h"
 
-// other
+// forward declaration of Struct
+// Allows Abstract mapping to implement creator/extractor interfaces.
+namespace jmx { struct Struct; }
+#include "getters.h"
 #include "creator.h"
 #include "extractor.h"
-// #include "forward.h"
+
+// definition of Struct, and forward definitions
+#include "mapping.h"
+#include "forward.h"
 #include "args.h"
 
 #endif
