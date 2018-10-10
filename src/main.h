@@ -27,9 +27,9 @@
 // sequence containers
 #include "sequence.h"
 
-// forward declaration of Struct
+// forward declarations of Struct and Cell
 // Allows Abstract mapping to implement creator/extractor interfaces.
-namespace jmx { struct Struct; }
+namespace jmx { class Struct; class Cell; }
 #include "getters.h"
 #include "creator.h"
 #include "extractor.h"

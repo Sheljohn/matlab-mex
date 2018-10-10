@@ -87,12 +87,9 @@ namespace jmx {
     Volume<T,M> get_volume_rw( const mxArray *ms ) { return get_volume<T,M>(ms); }
 
     // ----------  =====  ----------
-    
-    inline Cell get_cell( const mxArray *ms ) {
-        return Cell(ms);
-    }
 
-    // forward declaration of Struct extraction (see forward.h)
+    // forward declarations (see forward.h)
+    Cell get_cell( const mxArray *ms );
     Struct get_struct( const mxArray *ms, index_t index=0 ); 
 
 }

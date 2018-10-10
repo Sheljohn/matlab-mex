@@ -23,8 +23,9 @@ namespace jmx {
         // the pointer returned should be val (to be wrapped)
         virtual ptr_t _creator_assign( key_t k, ptr_t val ) =0;
 
-        // forward declaration of Struct creation (see forward.h)
+        // forward declarations (see forward.h)
         Struct mkstruct( key_t k, inilst<const char*> fields ); 
+        Cell mkcell( key_t k, index_t len );
 
         // ----------  =====  ----------
 
@@ -57,10 +58,6 @@ namespace jmx {
         inline Volume_mx<T> mkvol( key_t k, index_t nr, index_t nc, index_t ns ) {
             ptr_t pk = _creator_assign(k, make_volume( nr, nc, cpp2mex<T>::classid )); 
             return Volume_mx<T>( static_cast<T*>(mxGetData(pk)), nr, nc, ns );
-        }
-
-        inline Cell mkcell( key_t k, index_t len ) {
-            return Cell( _creator_assign(k, make_cell( len )) );
         }
 
         inline ptr_t mkstructarr( key_t k, inilst<const char*> fields, index_t nr, index_t nc ) {

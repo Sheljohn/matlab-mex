@@ -68,9 +68,9 @@ namespace jmx {
         using outptr_t = Creator<index_t>::ptr_t;
 
         // implement abstract methods
-        virtual inline bool _extractor_valid_key( key_t k ) const { return k < in.len; }
-        virtual inline inptr_t _extractor_get( key_t k ) const { return in[k]; }
-        virtual inline outptr_t _creator_assign( key_t k, outptr_t val ) { return out.assign(k,val); }
+        inline bool _extractor_valid_key( key_t k ) const { return k < in.len; }
+        inline inptr_t _extractor_get( key_t k ) const { return in[k]; }
+        inline outptr_t _creator_assign( key_t k, outptr_t val ) { return out.assign(k,val); }
         
         // ----------  =====  ----------
         

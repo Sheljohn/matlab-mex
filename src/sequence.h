@@ -127,40 +127,6 @@ namespace jmx {
     template <class T> using Volume_ro = Volume<T, ReadOnlyMemory<T> >;
     template <class T> using Volume_mx = Volume<T, MatlabMemory<T> >;
 
-    // ----------  =====  ----------
-    
-    class Cell 
-    {
-    public:
-
-        Cell()
-            { clear(); }
-        Cell( const mxArray *ms )
-            { wrap(ms); }
-
-        inline void clear()
-            { mcell = nullptr; }
-
-        void wrap( const mxArray *ms );
-        inline const mxArray* mx() const { return mcell; }
-            
-        inline index_t  numel () const { return mxGetNumberOfElements(mcell); }
-        inline bool     empty () const { return numel() == 0; }
-        inline bool     valid () const { return mcell && mxIsCell(mcell); }
-        inline operator bool  () const { return valid() && !empty(); }
-
-        inline mxArray* operator[] ( index_t index ) const { return get_value(index); }
-        inline mxArray* get_value  ( index_t index ) const { return mxGetCell(mcell, index); }
-
-        inline int set_value( index_t index, mxArray *value ) const {
-            return set_cell( const_cast<mxArray*>(mcell), index, value );
-        }
-
-    private: 
-
-        const mxArray *mcell;
-    };
-
 }
 
 #endif

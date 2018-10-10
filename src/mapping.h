@@ -58,15 +58,15 @@ namespace jmx {
         using extractor_type = Extractor<const char*>;
         using creator_type = Creator<const char*>;
         using key_t = extractor_type::key_t;
-        using mxinptr_t = extractor_type::ptr_t;
-        using mxoutptr_t = creator_type::ptr_t;
+        using inptr_t = extractor_type::ptr_t;
+        using outptr_t = creator_type::ptr_t;
 
-        inline mxinptr_t _extractor_get( key_t name ) const 
+        inline inptr_t _extractor_get( key_t name ) const 
             { return this->get_value(name); }
         inline bool _extractor_valid_key( key_t name ) const 
             { return this->has_field(name); }
             
-        inline mxoutptr_t _creator_assign( key_t name, mxoutptr_t value )
+        inline outptr_t _creator_assign( key_t name, outptr_t value )
             { set_value( name, value ); return value; }
 
     protected:
