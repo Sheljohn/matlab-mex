@@ -23,11 +23,11 @@ function files = jmx_cleanup( folder, type )
             return;
             
         case 'mex'
-            files = dk.fs.list_ext( folder, mexext );
+            files = dk.fs.lsext( folder, mexext );
             print = @(x) dk.info('[jmx_cleanup] Removing mex-file "%s"',x);
             
         case 'obj'
-            files = dk.fs.list_ext( folder, 'o' );
+            files = dk.fs.lsext( folder, 'o' );
             print = @(x) dk.info('[jmx_cleanup] Removing object-file "%s"',x);
         
         otherwise
