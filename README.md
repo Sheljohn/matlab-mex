@@ -1,5 +1,3 @@
 
-# Lightweight Matlab-Mex C++ library
+# This repository has been merged with the [deck toolbox](https://github.com/jhadida/deck) and is now archived.
 
-This library is under construction.
-See current [documentation](https://sheljohn.github.io/matlab-mex).
